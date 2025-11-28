@@ -21,22 +21,22 @@ public class BasePage {
     protected List<WebElement> findEls(By locator){
         return WaitUtils.waitForElementsVisible(driver, locator);
     }
-
-    protected WebElement findElByText(String text){
-
+    public List<WebElement> findElsIn(WebElement parent, By childLocator) {
+        return parent.findElements(childLocator);
     }
+
 
     protected void click(By locator) {
         WaitUtils.waitForElementClickable(driver,locator).click();
     }
 
     protected void type(By locator, String text) {
-        WebElement el = find(locator);
+        WebElement el = findEl(locator);
         el.clear();
         el.sendKeys(text);
     }
 
     protected String getText(By locator) {
-        return find(locator).getText();
+        return findEl(locator).getText();
     }
 }

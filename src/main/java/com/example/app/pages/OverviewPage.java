@@ -13,6 +13,7 @@ public class OverviewPage extends BasePage{
     public OverviewPage(AppiumDriver driver){
         super(driver);
     }
+
     public boolean isOverviewOpened() {
         try{
             findEl(OverviewTitle);
@@ -21,6 +22,7 @@ public class OverviewPage extends BasePage{
             return false;
         }
     }
+
     public boolean isSelectedProductTitleDisplayed(String itemTitle) {
 
         By titleLocator=By.xpath("//android.widget.TextView[@text='" + itemTitle + "']");
@@ -31,6 +33,7 @@ public class OverviewPage extends BasePage{
             return false;
         }
     }
+
     public boolean isSelectedProductPriceDisplayed(String itemPrice) {
 
         By titleLocator=By.xpath("//android.widget.TextView[@text='" + itemPrice + "']");

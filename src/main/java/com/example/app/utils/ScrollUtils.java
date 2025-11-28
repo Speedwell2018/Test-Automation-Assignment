@@ -4,17 +4,20 @@ import com.example.app.pages.BasePage;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 
 import java.time.Duration;
 import java.util.List;
 
-public class ScrollUtils extends BasePage {
+public class ScrollUtils {
 
+
+    private final AppiumDriver driver;
 
     public ScrollUtils(AppiumDriver driver) {
-        super(driver);
+        this.driver = driver;
     }
 
     public void scrollUp() {
@@ -30,11 +33,14 @@ public class ScrollUtils extends BasePage {
         int attempts = 0;
         while (attempts < maxScrolls) {
             try {
-                findEl(locator);
-                return;
+                WebElement element = WaitUtils.waitForElementVisible(driver, locator);
+                if (element != null && element.isDisplayed()) {
+                    return;
+                }
             } catch (Exception ignored) {
-                scrollUp();
+                // element not found yet → scroll
             }
+
             attempts++;
         }
         throw new RuntimeException("Element not found after scrolling: " + locator);
