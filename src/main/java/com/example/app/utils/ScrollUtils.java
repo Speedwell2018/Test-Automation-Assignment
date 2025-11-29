@@ -19,33 +19,6 @@ public class ScrollUtils {
     public ScrollUtils(AppiumDriver driver) {
         this.driver = driver;
     }
-
-    public void scrollUp() {
-        Dimension size = driver.manage().window().getSize();
-        int startY = (int) (size.height * 0.3);
-        int endY = (int) (size.height * 0.7);
-        int x = size.width / 2;
-
-        swipe(x, startY, x, endY);
-    }
-
-    public void scrollUntilVisible(By locator, int maxScrolls) {
-        int attempts = 0;
-        while (attempts < maxScrolls) {
-            try {
-                WebElement element = WaitUtils.waitForElementVisible(driver, locator);
-                if (element != null && element.isDisplayed()) {
-                    return;
-                }
-            } catch (Exception ignored) {
-                // element not found yet → scroll
-            }
-
-            attempts++;
-        }
-        throw new RuntimeException("Element not found after scrolling: " + locator);
-    }
-
     private void swipe(int startX, int startY, int endX, int endY) {
         PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger1");
 
@@ -58,4 +31,33 @@ public class ScrollUtils {
 
         driver.perform(List.of(swipe));
     }
+   public void scrollUp() {
+        Dimension size = driver.manage().window().getSize();
+        int startY = (int) (size.height * 0.7);
+        int endY = (int) (size.height * 0.3);
+        int x = size.width / 2;
+
+        swipe(x, startY, x, endY);
+    }
+
+    public void scrollUntilVisible(By locator, int maxScrolls) {
+        int attempts = 0;
+        while (attempts < maxScrolls) {
+            try {
+                WebElement element = WaitUtils.waitForElementVisible(driver, locator);
+                if (element != null && element.isDisplayed()) {
+                    System.out.println(element.getAttribute("displayed"));
+                    System.out.println(element.getText());
+                    return;
+                }
+            } catch (Exception ignored) {
+                // element not found yet → scroll
+            }
+            scrollUp();
+            attempts++;
+        }
+        throw new RuntimeException("Element not found after scrolling: " + locator);
+    }
+
+
 }

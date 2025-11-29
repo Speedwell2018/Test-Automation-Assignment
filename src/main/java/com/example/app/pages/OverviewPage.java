@@ -6,7 +6,7 @@ import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 
 public class OverviewPage extends BasePage{
-    private final By OverviewTitle = By.xpath("//*[@text='CHECKOUT:OVERVIEW']");
+    private final By OverviewTitle = By.xpath("//*[@text='CHECKOUT: OVERVIEW']");
 
     private final By finishButton = AppiumBy.accessibilityId("test-FINISH");
 
@@ -19,6 +19,7 @@ public class OverviewPage extends BasePage{
             findEl(OverviewTitle);
             return true;}
         catch (Exception e){
+
             return false;
         }
     }

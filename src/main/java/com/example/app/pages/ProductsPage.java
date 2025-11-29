@@ -1,5 +1,6 @@
 package com.example.app.pages;
 import com.example.app.models.ProductModel;
+import com.example.app.utils.ScrollUtils;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 
@@ -8,7 +9,7 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-import static com.example.app.utils.ActionsHelper.scrollUp;
+
 
 
 public class ProductsPage extends BasePage {
@@ -26,6 +27,7 @@ public class ProductsPage extends BasePage {
         super(driver);
     }
     public ProductModel selectFirstAvailableProduct() {
+        ScrollUtils scrollUtils=new ScrollUtils(driver);
 
         int maxScrolls = 3;
 
@@ -42,7 +44,7 @@ public class ProductsPage extends BasePage {
                 return new ProductModel(title, price);
             }
         }
-            scrollUp(driver);
+           scrollUtils.scrollUp();
         }
 
         throw new RuntimeException("No available product found after scrolling.");
