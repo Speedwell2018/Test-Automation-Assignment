@@ -1,0 +1,5 @@
+firstName,lastName,zip,expectedError
+,,,First Name is required
+,Smith,123456,First Name is required
+John,,123456,Last Name is required
+John,Smith,,Postal Code is required

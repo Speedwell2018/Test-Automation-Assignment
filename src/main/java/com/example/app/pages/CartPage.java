@@ -16,35 +16,43 @@ public class CartPage extends BasePage {
     }
 
     public boolean isCartOpened() {
+        log.info("Checking if Cart page is opened...");
         try{
             findEl(cartTitle);
-            return true;} catch (Exception e){
+            log.info("Cart page is opened");
+            return true;
+        } catch (Exception e){
+            log.warn("Cart page is NOT opened");
             return false;
         }
     }
 
     public boolean isSelectedProductTitleDisplayed(String itemTitle) {
+        log.info("Checking if product title '{}' is displayed in cart...", itemTitle);
         By titleLocator=By.xpath("//android.widget.TextView[@text='" + itemTitle + "']");
         ScrollUtils scroll = new ScrollUtils(driver);
 
-        scroll.scrollUntilVisible(titleLocator, 5);
-
-        return driver.findElement(titleLocator).isDisplayed();
+        boolean displayed=scroll.scrollForElemntExistanceCheck(titleLocator);
+        log.info("Product title '{}' displayed: {}", itemTitle, displayed);
+        return displayed;
     }
 
     public boolean isSelectedProductPriceDisplayed(String itemPrice) {
+        log.info("Checking if product price '{}' is displayed in cart...", itemPrice);
 
         By priceLocator=By.xpath("//android.widget.TextView[@text='" + itemPrice + "']");
         ScrollUtils scroll = new ScrollUtils(driver);
 
-        scroll.scrollUntilVisible(priceLocator, 5);
+        boolean displayed = scroll.scrollForElemntExistanceCheck(priceLocator);
+        log.info("Product price '{}' displayed: {}", itemPrice, displayed);
+        return displayed;
 
-        return driver.findElement(priceLocator).isDisplayed();
     }
 
-
     public ChekoutInfoPage clickCheckout() {
-        click(checkoutButton);
+        log.info("Clicking checkout button...");
+        click(checkoutButton); // BasePage logs click
+        log.info("Navigated to Checkout Info Page");
         return new ChekoutInfoPage(driver);
     }
 

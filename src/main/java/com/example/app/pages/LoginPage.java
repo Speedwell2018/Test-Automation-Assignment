@@ -13,11 +13,15 @@ public class LoginPage extends BasePage{
         super(driver);
     }
     public void fillCredentialsFields(){
+        log.info("Selecting standard user credentials...");
         click(standardUser);
+        log.info("Standard user selected");
     }
 
     public void clickLoginButton(){
+        log.info("Clicking Login button...");
         click(loginButton);
+        log.info("Login button clicked");
     }
 
     public void login(){
