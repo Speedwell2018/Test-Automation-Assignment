@@ -33,8 +33,8 @@ public class OverviewPage extends BasePage{
         By titleLocator=By.xpath("//android.widget.TextView[@text='" + itemTitle + "']");
 
 
-        ScrollUtils scroll = new ScrollUtils(driver);
-        boolean displayed = scroll.scrollUntilVisible(titleLocator).isDisplayed();
+
+        boolean displayed = scrollUntilVisible(titleLocator).isDisplayed();
         log.info("Product title '{}' displayed: {}", itemTitle, displayed);
         return displayed;
 
@@ -43,16 +43,14 @@ public class OverviewPage extends BasePage{
     public boolean isSelectedProductPriceDisplayed(String itemPrice) {
         log.info("Checking if product price '{}' is displayed on Overview page...", itemPrice);
         By priceLocator=By.xpath("//android.widget.TextView[@text='" + itemPrice + "']");
-         ScrollUtils scroll = new ScrollUtils(driver);
-        boolean displayed = scroll.scrollUntilVisible(priceLocator).isDisplayed();
+        boolean displayed = scrollUntilVisible(priceLocator).isDisplayed();
         log.info("Product price '{}' displayed: {}", itemPrice, displayed);
         return displayed;
     }
 
     public ThankYouPage clickFinish(){
         log.info("Scrolling to and clicking Finish button...");
-        ScrollUtils scrollUtils=new ScrollUtils(driver);
-        scrollUtils.scrollUntilVisible(finishButton).click();
+        scrollUntilVisible(finishButton).click();
         log.info("Finish button clicked, navigating to Thank You page");
         return new ThankYouPage(driver);
     }

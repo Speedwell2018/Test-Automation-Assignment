@@ -22,8 +22,10 @@ public class ProductsPage extends BasePage {
     private By priceInsideItem = AppiumBy.accessibilityId("test-Price");
     private By addToCartInsideItem = AppiumBy.accessibilityId("test-ADD TO CART");
     private By removeCartInsideItem = AppiumBy.accessibilityId("test-REMOVE");
-    private final By cartIcon = AppiumBy.accessibilityId("test-Cart");
-    private final By counterBadge = By.xpath("//android.view.ViewGroup[@content-desc='test-Cart']");
+    private final By sortButton = AppiumBy.accessibilityId("test-Modal Selector Button");
+    private final String sortOption="new UiSelector().text(\"%s\")";
+
+
 
     public ProductsPage(AppiumDriver driver){
         super(driver);
@@ -100,4 +102,28 @@ public class ProductsPage extends BasePage {
         }
     }
 
+    public void selectSortOption(String optionText) {
+        findEl(sortButton).click();
+        click(AppiumBy.androidUIAutomator(String.format(sortOption, optionText)));
+    }
+
+    public List<String> getAllProductTitles() {
+        log.info("Extracting ALL product titles with scrolling...");
+        List<String> titles= getAllTexts(titleInsideItem);
+        log.info("Collected {} titles", titles.size());
+        return titles;
+
+    }
+
+    public List<Double> getAllProductPrices() {
+        log.info("Extracting ALL product prices with scrolling...");
+        List<Double> prices= getAllTexts(priceInsideItem)
+                .stream()
+                .map(t -> Double.parseDouble(t.replace("$", "")))
+                .toList();
+        log.info("Collected {} prices", prices.size());
+        return prices;
+    }
 }
+
+

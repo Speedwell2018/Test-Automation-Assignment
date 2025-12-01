@@ -14,4 +14,9 @@ public class CheckoutData {
         return CSVUtils.readCSV("src/test/resources/testdata/checkout_flow_data.csv");
     }
 
+    @DataProvider(name = "sortingOptions")
+    public static Object[][] sortingOptions() throws IOException {
+        return CSVUtils.readCSV("src/test/resources/testdata/sorting_options_list.csv");
+    }
+
 }

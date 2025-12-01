@@ -14,7 +14,6 @@ import java.util.List;
 
 public class ScrollUtils {
     private static final Logger log = LoggerFactory.getLogger(ScrollUtils.class);
-    private final By footerLocator = By.xpath("//*[contains(@text, 'Terms of Service')]");
     private final AppiumDriver driver;
 
     public ScrollUtils(AppiumDriver driver) {
@@ -27,7 +26,7 @@ public class ScrollUtils {
         Sequence swipe = new Sequence(finger, 1)
                 .addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY))
                 .addAction(finger.createPointerDown(0))
-                .addAction(finger.createPointerMove(Duration.ofMillis(500),
+                .addAction(finger.createPointerMove(Duration.ofMillis(300),
                         PointerInput.Origin.viewport(), endX, endY))
                 .addAction(finger.createPointerUp(0));
 
@@ -35,8 +34,8 @@ public class ScrollUtils {
     }
    public void scrollUp() {
         Dimension size = driver.manage().window().getSize();
-        int startY = (int) (size.height * 0.7);
-        int endY = (int) (size.height * 0.3);
+        int startY = (int) (size.height * 0.85);
+        int endY = (int) (size.height * 0.25);
         int x = size.width / 2;
 
         log.info("Scrolling up... screenSize=({}x{}), startY={}, endY={}", size.width, size.height, startY, endY);
@@ -44,68 +43,18 @@ public class ScrollUtils {
         swipe(x, startY, x, endY);
     }
 
-    public WebElement scrollUntilVisible(By locator) {
-        log.info("Scrolling until element becomes visible: {}", locator);
-        int maxScrolls = 5;
-        for (int i = 0; i < maxScrolls; i++) {
-            List<WebElement> found = driver.findElements(locator);
-            if (!found.isEmpty()) {
-                WebElement element = found.get(0);
+    public void scrollDown() {
+        Dimension size = driver.manage().window().getSize();
+        int startY = (int) (size.height * 0.25);
+        int endY = (int) (size.height * 0.85);
+        int x = size.width / 2;
 
+        log.info("Scrolling up... screenSize=({}x{}), startY={}, endY={}", size.width, size.height, startY, endY);
 
-                try {
-                    if (element.isDisplayed()) {
-                        log.info("Element FOUND and VISIBLE: {}", locator);
-                        return element;
-                    } else {
-                        log.debug("Element found but not visible yet: {}", locator);
-                    }
-                    } catch (Exception e) {
-                        log.debug("Element found but not interactable yet: {}", e.getMessage());
-                    }
-                }
-            try {
-                WebElement footer = driver.findElement(footerLocator);
-                if (footer.isDisplayed()) {
-                    log.warn("Reached footer '{}' before finding element: {}", footerLocator, locator);
-                    throw new RuntimeException(
-                            "Reached footer before finding element: " + footerLocator);
-                }
-            } catch (Exception ignored) {}
-            scrollUp();
-
-        }
-        log.error("Element NOT FOUND after {} scroll attempts: {}", locator);
-        throw new RuntimeException("Element not found after scrolling: " + locator);
+        swipe(x, startY, x, endY);
     }
 
-    public boolean scrollForElemntExistanceCheck(By locator) {
-        log.info("Scrolling to check existence of element: {}", locator);
-        int attempts = 0;
-        int maxScrolls = 5;
 
-        while (attempts < maxScrolls) {
-            log.debug("Existence check scroll attempt {}/{}", (attempts + 1), maxScrolls);
-
-
-            List<WebElement> elements = driver.findElements(locator);
-            if (!elements.isEmpty()){
-                log.info("Element EXISTS: {}", locator);
-                return true;}
-
-
-            if (!driver.findElements(footerLocator).isEmpty()) {
-                log.info("Footer reached — element does NOT exist: {}", locator);
-                return false;  }// reached bottom
-
-
-            scrollUp();
-            attempts++;
-        }
-        log.info("Element NOT found after {} scrolls: {}", maxScrolls, locator);
-
-        return false;
-    }
 
 
 }
