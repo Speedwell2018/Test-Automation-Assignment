@@ -1,7 +1,9 @@
 package Tests;
 
+import com.example.app.components.HeaderComponent;
 import com.example.app.enums.SortOption;
 import com.example.app.pages.ProductsPage;
+import listeners.RetryAnalyzer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -11,10 +13,11 @@ import java.util.List;
 public class ProductsSortingTest extends BaseTest{
 
 
-    @Test(dataProvider = "sortOptions", dataProviderClass = data.ProductSorting.class, description = "Sorting verification")
+    @Test(retryAnalyzer = RetryAnalyzer.class, dataProvider = "sortOptions", dataProviderClass = data.ProductSorting.class, description = "Sorting verification")
     public void verifySorting(SortOption option, String optionText){
 
         ProductsPage products = new ProductsPage(driver);
+        HeaderComponent header = new HeaderComponent(driver);
 
         products.selectSortOption(optionText);
 

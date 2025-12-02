@@ -1,22 +1,18 @@
 package com.example.app.pages;
+import com.example.app.components.HeaderComponent;
 import com.example.app.models.ProductModel;
 import com.example.app.utils.ScrollUtils;
-import com.example.app.utils.WaitUtils;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
 import java.util.List;
-import com.example.app.utils.Const;
 
-import static com.example.app.utils.Const.BUTTON_REMOVE;
 
 
 public class ProductsPage extends BasePage {
 
-
+    private final By ProductTitle = AppiumBy.androidUIAutomator( "new UiSelector().text(\"PRODUCTS\")");
     private By productItem = AppiumBy.accessibilityId("test-Item");
     private By titleInsideItem = AppiumBy.accessibilityId("test-Item title");
     private By priceInsideItem = AppiumBy.accessibilityId("test-Price");
@@ -26,9 +22,29 @@ public class ProductsPage extends BasePage {
     private final String sortOption="new UiSelector().text(\"%s\")";
 
 
-
     public ProductsPage(AppiumDriver driver){
         super(driver);
+    }
+
+    public void openProductsPage(){
+        log.info("Checking if Products page is opened...");
+        if (!isProductPageOpened()){
+            log.info("Open Products Page...");
+            HeaderComponent header=new HeaderComponent(driver);
+            header.openProductsPage();
+        }
+    }
+
+    public boolean isProductPageOpened() {
+        log.info("Checking if Products page is opened...");
+        try{
+            findEl(ProductTitle);
+            log.info("Products page is opened");
+            return true;} catch (Exception e){
+            log.warn("Products page is NOT opened");
+
+            return false;
+        }
     }
 
     public ProductModel selectProductNotInCart() {
@@ -103,8 +119,19 @@ public class ProductsPage extends BasePage {
     }
 
     public void selectSortOption(String optionText) {
-        findEl(sortButton).click();
-        click(AppiumBy.androidUIAutomator(String.format(sortOption, optionText)));
+        log.info("Selecting sort option: {}", optionText);
+        try{
+            log.debug("Clicking sort button: {}", sortButton);
+            findEl(sortButton).click();
+            String locator = String.format(sortOption, optionText);
+            log.debug("Generated sort option locator: {}", locator);
+            log.info("Clicking on sort option: {}", optionText);
+            click(AppiumBy.androidUIAutomator(locator));
+            log.info("Sort option '{}' selected successfully.", optionText);
+        } catch (Exception e) {
+            log.error("Failed to select sort option '{}': {}", optionText, e.getMessage(), e);
+            throw e;
+        }
     }
 
     public List<String> getAllProductTitles() {

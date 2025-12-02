@@ -6,15 +6,17 @@ import org.openqa.selenium.By;
 
 public class LoginPage extends BasePage{
 
-    private final By standardUser=By.xpath("//android.widget.TextView[@text='standard_user']");
+    private final By standardUser=AppiumBy.androidUIAutomator("new UiSelector().text(\"standard_user\")");
     private final By loginButton= AppiumBy.accessibilityId("test-LOGIN");
 
-    public LoginPage(AppiumDriver driver){
+    public LoginPage(AppiumDriver driver) {
         super(driver);
     }
+
     public void fillCredentialsFields(){
         log.info("Selecting standard user credentials...");
-        click(standardUser);
+
+        findEl(standardUser, 20).click();
         log.info("Standard user selected");
     }
 

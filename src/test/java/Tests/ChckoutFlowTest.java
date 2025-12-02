@@ -3,16 +3,16 @@ package Tests;
 import com.example.app.components.HeaderComponent;
 import com.example.app.models.ProductModel;
 import com.example.app.pages.*;
+import listeners.RetryAnalyzer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class ChckoutFlowTest extends BaseTest {
 
-    @Test(dataProvider = "checkoutFlowData", dataProviderClass = data.CheckoutData.class,description = "Complete checkout flow from cart to order confirmation")
+    @Test(retryAnalyzer = RetryAnalyzer.class, dataProvider = "checkoutFlowData", dataProviderClass = data.CheckoutData.class,description = "Complete checkout flow from cart to order confirmation")
     public void completeCheckoutFlow(String firstName, String lastName, String zip) {
-
-        HeaderComponent header = new HeaderComponent(driver);
         ProductsPage products = new ProductsPage(driver);
+        HeaderComponent header = new HeaderComponent(driver);
         ProductModel selectedProduct = products.selectProductNotInCart();
         String selectedTitle = selectedProduct.getTitle();
         String selectedPrice = selectedProduct.getPrice();
@@ -33,6 +33,7 @@ public class ChckoutFlowTest extends BaseTest {
 
         Assert.assertTrue(thankYouPage.isThankYouPageOpened(), "Thank you page is not displayed");
         Assert.assertFalse(header.isBadgeDisplayed(), "Badge should disappear after checkout");
+        thankYouPage.clickBckHomeButton();
 
     }
 

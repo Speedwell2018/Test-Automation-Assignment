@@ -8,7 +8,7 @@ public class ProductModel {
     public ProductModel(String title, String price) {
         this.title = title;
         this.price = price;
-            }
+    }
 
     public String getTitle() {
         return title;

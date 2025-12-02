@@ -4,23 +4,29 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.time.Duration;
 
 public class DriverFactory {
+    private static final Logger log = LoggerFactory.getLogger(DriverFactory.class);
     private static AppiumDriver driver;
     private static Dotenv dotenv;
 
     static{
+        log.info("Initializing Dotenv and loading environment variables...");
         dotenv = Dotenv.configure()
                 .directory(System.getProperty("user.dir")) // папка проекта
                 .ignoreIfMissing() // не упадёт, если .env нет
                 .load();
+        log.info(".env file loaded successfully (or ignored if missing).");
     }
 
     public static AppiumDriver getDriver(){
         if (driver==null){
+            log.info("Driver is null. Creating a new Appium driver instance...");
 
             try{
                 DesiredCapabilities caps = new DesiredCapabilities();
@@ -50,27 +56,34 @@ public class DriverFactory {
                 caps.setCapability("appium:ignoreHiddenApiPolicyError", true);
 
                 driver = new AndroidDriver(new URL(getenv("APPIUM_SERVER", "http://127.0.0.1:4723")), caps);
-                driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(
-                        Integer.parseInt(getenv("IMPLICIT_WAIT","5"))
-                ));
+                int implicitWait = Integer.parseInt(getenv("IMPLICIT_WAIT", "15"));
+                driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
+                log.info("Appium driver created successfully with implicit wait: {} sec", implicitWait);
             } catch (Exception e) {
                 throw new RuntimeException("Failed to create Appium driver: " + e.getMessage(), e);
             }
         }
+        log.debug("Returning existing Appium driver instance.");
         return driver;
     }
 
     private static String getenv(String key, String defaultValue) {
-        return dotenv.get(key, defaultValue);
+
+        String value = dotenv.get(key, defaultValue);
+        log.debug("Env variable {} = {}", key, value);
+        return value;
     }
 
 
     public static void quitDriver() {
         if (driver != null) {
+            log.info("Quitting Appium driver...");
             try {
                 driver.quit();
+                log.info("Driver quit successfully.");
             } finally {
                 driver = null;
+                log.debug("Driver reference cleared (set to null).");
             }
         }
     }

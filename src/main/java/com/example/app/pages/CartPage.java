@@ -5,8 +5,9 @@ import org.openqa.selenium.By;
 
 public class CartPage extends BasePage {
 
-    private final By cartTitle = By.xpath("//*[@text='YOUR CART']");
-    private final String item = "//android.widget.TextView[@text='%s']";
+    private final By cartTitle = AppiumBy.androidUIAutomator("new UiSelector().text(\"YOUR CART\")");
+    private final String item ="new UiSelector().text(\"%s\")";
+    private final By continueShopping=AppiumBy.accessibilityId("test-CONTINUE SHOPPING");
 
     private final By checkoutButton = AppiumBy.accessibilityId("test-CHECKOUT");
 
@@ -35,20 +36,23 @@ public class CartPage extends BasePage {
 
     public boolean isSelectedProductPriceDisplayed(String itemPrice) {
         log.info("Checking if product price '{}' is displayed in cart...", itemPrice);
-
-        By priceLocator=By.xpath("//android.widget.TextView[@text='" + itemPrice + "']");
-
-        boolean displayed = scrollForElemntExistanceCheck(priceLocator);
+        boolean displayed = scrollForElemntExistanceCheck(AppiumBy.androidUIAutomator(String.format(item,itemPrice)));
         log.info("Product price '{}' displayed: {}", itemPrice, displayed);
         return displayed;
 
     }
 
     public ChekoutInfoPage clickCheckout() {
-        log.info("Clicking checkout button...");
-        click(checkoutButton); // BasePage logs click
+        log.info("Scrolling to and clicking Checkout button...");
+        scrollUntilVisible(checkoutButton).click(); // BasePage logs click
         log.info("Navigated to Checkout Info Page");
         return new ChekoutInfoPage(driver);
+    }
+
+    public void clickContinueShopping() {
+        log.info("Clicking Continue Shopping button...");
+        click(continueShopping); // BasePage logs click
+        log.info("Navigated to Products Page");
     }
 
 }
